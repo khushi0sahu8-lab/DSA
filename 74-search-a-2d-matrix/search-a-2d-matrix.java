@@ -1,43 +1,26 @@
 class Solution {
-    public static boolean searchMatrix(int[][] matrix, int target) {
-        int low=matrix[0][0];
-        int high=0;
-        for(int []row :matrix){
-            for(int num :row){
-                high=Math.max(num,high);
-            }
-            
-            while(low<=high){
-                int mid=low+(high-low)/2;
-                boolean res=checkmid(matrix,mid);
-                if(res &&mid==target){
-                    return true;
-                }
-                else if(mid<target){
-                    low=mid+1;
-                }
-                else{
-                    high=mid-1;
-                }
-            }
-        }
-        return false;
-        
+    public boolean searchMatrix(int[][] matrix, int target) {
+
+        int m = matrix.length;
+        int n = matrix[0].length;
+
+        return binarySearch(matrix, target, 0, m * n - 1, n);
     }
-    public static boolean checkmid(int[][] matrix,int mid){
-        
-        for(int []row : matrix){
-            for(int num : row){
-                if(num==mid){
-                   return true;
-                }
-            }
+
+    static boolean binarySearch(int[][] matrix, int target, int low, int high, int n) {
+        if (low > high) {
+            return false;
         }
-        return false;
-    }
-    public static void main(String []args){
-        int [][]matrix={{1,3,5,7},{10,11,16,20},{23,30,34,60}};
-        boolean res=searchMatrix(matrix,3);
-        System.out.println(res);
+        int mid = low + (high - low) / 2;
+        int row = mid / n;
+        int col = mid % n;
+
+        if (matrix[row][col] == target) {
+            return true;
+        }
+        if (target < matrix[row][col]) {
+            return binarySearch(matrix, target, low, mid - 1, n);
+        }
+        return binarySearch(matrix, target, mid + 1, high, n);
     }
 }
